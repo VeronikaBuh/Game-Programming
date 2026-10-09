@@ -1,0 +1,15 @@
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+#Временные файлы IDE (Visual Studio / Rider)
+.vs/
+.idea/
+*.csproj
+*.sln
+#Системные файлы
+.DS_Store
+Thumbs.db
