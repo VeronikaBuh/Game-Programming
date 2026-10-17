@@ -4,38 +4,42 @@ namespace WaterProstecting
 {
     public class CameraFollow : MonoBehaviour
     {
-        public Transform target; //Грибочек
+        public Transform target;
         public float distance = 5f;
         public float height = 2f;
-        public float followSpeed = 5f; //Плавность
-        public float rotationSpeed = 5f; //Поворот
+        public float followSpeed = 8f;
+        public float mouseSensitivity = 3f;
+        public float minPitch = -30f;
+        public float maxPitch = 60f;
+
+        private float yaw = 0f;
+        private float pitch = 20f;
 
         void LateUpdate()
         {
             if (target == null) return;
 
-            //Расположение камеры позади грибочка
+            //Вращение зажата пкм
+            if (Input.GetMouseButton(1))
+            {
+                yaw += Input.GetAxis("Mouse X") * mouseSensitivity;
+                pitch -= Input.GetAxis("Mouse Y") * mouseSensitivity;
+                pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
+            }
+
+            Quaternion rotation = Quaternion.Euler(pitch, yaw, 0);
             Vector3 desiredPos = target.position
-                                 - target.forward * distance
+                                 + rotation * new Vector3(0, 0, -distance)
                                  + Vector3.up * height;
 
-            //Плавно движение камеры
             transform.position = Vector3.Lerp(
                 transform.position,
                 desiredPos,
                 followSpeed * Time.deltaTime
             );
 
-            //Смотрим на грибочка
             Vector3 lookPoint = target.position + Vector3.up * 1f;
-            Quaternion desiredRot = Quaternion.LookRotation(lookPoint - transform.position);
-
-            //Плавный поворот камеры
-            transform.rotation = Quaternion.Slerp(
-                transform.rotation,
-                desiredRot,
-                rotationSpeed * Time.deltaTime
-            );
+            transform.rotation = Quaternion.LookRotation(lookPoint - transform.position);
         }
     }
 }
