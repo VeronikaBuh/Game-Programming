@@ -27,7 +27,7 @@ namespace WaterProstecting
 
             foreach (var hit in hits)
             {
-                //Не показывать все рендеры на объекте и его детях
+                //Не показ все рендеры на объ
                 Renderer[] renderers = hit.collider.GetComponentsInChildren<Renderer>();
                 foreach (var rend in renderers)
                 {

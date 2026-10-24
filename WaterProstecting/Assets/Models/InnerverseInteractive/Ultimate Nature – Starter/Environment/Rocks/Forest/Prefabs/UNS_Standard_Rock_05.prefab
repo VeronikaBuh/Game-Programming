@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2570177443751124602}
   - component: {fileID: 3786933349006227677}
   - component: {fileID: 7250510424195107895}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: UNS_Standard_Rock_05_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 4385642206807640369}
   - component: {fileID: 5826886574555221484}
   - component: {fileID: 9056406009791343757}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: UNS_Standard_Rock_05_LOD3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -191,7 +191,7 @@ GameObject:
   - component: {fileID: 2908173736270549603}
   - component: {fileID: 7968867958042261372}
   - component: {fileID: 3094478159984005514}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: UNS_Standard_Rock_05
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -208,7 +208,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.6269329, y: 0.62693286, z: 0.6269329}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2570177443751124602}
@@ -282,7 +282,7 @@ GameObject:
   - component: {fileID: 8092257909908457659}
   - component: {fileID: 7835802438228755738}
   - component: {fileID: 2835213612906811906}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: UNS_Standard_Rock_05_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -372,7 +372,7 @@ GameObject:
   - component: {fileID: 4396196830054236569}
   - component: {fileID: 1183649384256889861}
   - component: {fileID: 5907651779902843473}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: UNS_Standard_Rock_05_LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem; // <--- Добавлено для новой системы ввода
 
 namespace WaterProstecting
 {
@@ -19,11 +20,14 @@ namespace WaterProstecting
         {
             if (target == null) return;
 
-            //Вращение зажата пкм
-            if (Input.GetMouseButton(1))
+            //Вращение, зажата ПКМ
+            if (Mouse.current != null && Mouse.current.rightButton.isPressed)
             {
-                yaw += Input.GetAxis("Mouse X") * mouseSensitivity;
-                pitch -= Input.GetAxis("Mouse Y") * mouseSensitivity;
+                // Умножаем, чтобы чувств ощущалась
+                Vector2 mouseDelta = Mouse.current.delta.ReadValue();
+                yaw += mouseDelta.x * mouseSensitivity * 0.1f;
+                pitch -= mouseDelta.y * mouseSensitivity * 0.1f;
+                
                 pitch = Mathf.Clamp(pitch, minPitch, maxPitch);
             }
 

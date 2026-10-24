@@ -1,94 +1,118 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace WaterProstecting
 {
     [RequireComponent(typeof(Rigidbody))]
     public class PlayerController : MonoBehaviour
     {
-        public float moveSpeed = 7f; //Скорость ходьбы
-        public float jumpForce = 6f; //Высота прыжка
-        public float jumpCooldown = 0.3f; //Задержка между прыжками
-        public float dashSpeed = 15f; //Скорость рывка
-        public float dashTime = 0.2f; //Длительность рывка
-        public float dashCooldown = 2f; //Перезарядка рывка
+        public float moveSpeed = 7f;
+        public float jumpForce = 6f;
+        public float jumpCooldown = 0.3f;
+        public float dashSpeed = 15f;
+        public float dashTime = 0.2f;
+        public float dashCooldown = 2f;
 
-        public Transform groundCheck; //Точка под ногами
-        public TrailRenderer dashTrail; //След при рывке
+        public Transform groundCheck;
+        public float groundRadius = 0.2f;
+        public LayerMask groundLayer; //Слой земли (не цеплять кусты)
+        public TrailRenderer dashTrail;
 
         private Rigidbody rb;
-        private bool isGrounded; //Проверка земли
-        private bool isDashing; //Проверка рывка
-        private float dashTimer; //Таймер рывка
-        private float cooldownTimer; //Таймер перезарядки рывка
-        private float jumpTimer; //Таймер задержки прыжка
-        private bool canJump = true; //Можно ли сейчас прыгать
+        private bool isGrounded;
+        private bool isDashing;
+        private float dashTimer;
+        private float cooldownTimer;
+        private float jumpTimer;
+        private bool canJump = true;
+
+        private PlayerControls controls;
+        private Vector2 moveInput;
+
+        void Awake()
+        {
+            controls = new PlayerControls();
+        }
+
+        void OnEnable()
+        {
+            controls.Player.Enable();
+            controls.Player.Jump.performed += OnJump;
+            controls.Player.Dash.performed += OnDash;
+        }
+
+        void OnDisable()
+        {
+            controls.Player.Jump.performed -= OnJump;
+            controls.Player.Dash.performed -= OnDash;
+            controls.Player.Disable();
+        }
 
         void Start()
         {
             rb = GetComponent<Rigidbody>();
             rb.freezeRotation = true;
-            if (dashTrail != null)
-            {
-                dashTrail.emitting = false;
-            }
+            if (dashTrail != null) dashTrail.emitting = false;
         }
 
         void Update()
         {
-            //Проверка, на земле ли
-            isGrounded = Physics.CheckSphere(groundCheck.position, 0.3f);
-            //Сбрасываем, если грибочек оторвался от земли
-            if (!isGrounded)
+            moveInput = controls.Player.Move.ReadValue<Vector2>();
+
+            //Проверка земли
+            isGrounded = Physics.CheckSphere(groundCheck.position, groundRadius, groundLayer);
+            
+            if (!isGrounded && !isDashing) 
             {
                 canJump = false;
             }
-            //Прыжок разрешён только если
-            if (Input.GetKeyDown(KeyCode.Space) && isGrounded && canJump && !isDashing && jumpTimer <= 0)
-            {
-                rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
-                canJump = false;              //Запрет второго прыжка
-                jumpTimer = jumpCooldown;     //Запуск задержки
-            }
-            //Рывок
-            if (Input.GetKeyDown(KeyCode.LeftShift) && cooldownTimer <= 0 && !isDashing)
-            {
-                StartDash();
-            }
-            //Таймер
+
             if (dashTimer > 0) dashTimer -= Time.deltaTime;
             if (cooldownTimer > 0) cooldownTimer -= Time.deltaTime;
-            if (jumpTimer > 0) jumpTimer -= Time.deltaTime; //Задержка прыжка
-            //Можно прыгать
-            if (isGrounded && jumpTimer <= 0)
+            if (jumpTimer > 0) jumpTimer -= Time.deltaTime;
+
+            //Прыгать снова если грибок на земле и таймер прошел
+            if (isGrounded && jumpTimer <= 0) 
             {
                 canJump = true;
             }
-            //Конец рывка
+
             if (isDashing && dashTimer <= 0)
             {
                 isDashing = false;
                 cooldownTimer = dashCooldown;
-                if (dashTrail != null)
-                {
-                    dashTrail.emitting = false;
-                }
+                if (dashTrail != null) dashTrail.emitting = false;
+            }
+        }
+
+        private void OnJump(InputAction.CallbackContext context)
+        {
+            if (isGrounded && canJump && !isDashing && jumpTimer <= 0)
+            {
+                rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
+                canJump = false;
+                jumpTimer = jumpCooldown;
+            }
+        }
+
+        private void OnDash(InputAction.CallbackContext context)
+        {
+            if (cooldownTimer <= 0 && !isDashing)
+            {
+                StartDash();
             }
         }
 
         void FixedUpdate()
         {
-            //Если рывок, увел скорость
             if (isDashing)
             {
                 rb.linearVelocity = transform.forward * dashSpeed;
                 return;
             }
-            //WASD
-            float h = Input.GetAxisRaw("Horizontal");
-            float v = Input.GetAxisRaw("Vertical");
-            Vector3 input = new Vector3(h, 0, v).normalized;
 
-            //Направ камеры, - наклон
+            Vector3 input = new Vector3(moveInput.x, 0, moveInput.y).normalized;
+
             Vector3 camForward = Camera.main.transform.forward;
             camForward.y = 0;
             camForward.Normalize();
@@ -112,9 +136,14 @@ namespace WaterProstecting
         {
             isDashing = true;
             dashTimer = dashTime;
-            if (dashTrail != null)
+            if (dashTrail != null) dashTrail.emitting = true;
+        }
+        void OnDrawGizmosSelected()
+        {
+            if (groundCheck != null)
             {
-                dashTrail.emitting = true;
+                Gizmos.color = Color.green;
+                Gizmos.DrawWireSphere(groundCheck.position, groundRadius);
             }
         }
     }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 627214813600479907}
   - component: {fileID: 698867047899079879}
   - component: {fileID: 4456934789855740521}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: UNS_Bush_LOD3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 5974288423136081156}
   - component: {fileID: 2317480605342346501}
   - component: {fileID: 7694849633776302513}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: UNS_Bush_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -191,7 +191,7 @@ GameObject:
   - component: {fileID: 8357845065909269105}
   - component: {fileID: 1264986682210009208}
   - component: {fileID: 8494625722665159585}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: UNS_Bush_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -281,7 +281,7 @@ GameObject:
   - component: {fileID: 6987928883966674464}
   - component: {fileID: 4199997986240525750}
   - component: {fileID: 3719872365179952550}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: UNS_Bush
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -354,7 +354,7 @@ CapsuleCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -373,7 +373,7 @@ GameObject:
   - component: {fileID: 2696763480394073175}
   - component: {fileID: 1998912746926042478}
   - component: {fileID: 4217966650985615720}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: UNS_Bush_LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
