@@ -164,8 +164,7 @@ namespace WaterProstecting
             if (showDebugLogs) Debug.Log("ПОРАЖЕНИЕ — время вышло");
         }
 
-        // === UI ===
-
+        //Обновление UI
         private void UpdateUI()
         {
             if (dewText != null)
@@ -189,8 +188,7 @@ namespace WaterProstecting
             if (messageText != null) messageText.text = "";
         }
 
-        // === КНОПКИ ===
-
+        //Кнопки
         public void RestartGame()
         {
             Time.timeScale = 1f;

@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.InputSystem; // <--- Добавлено для новой системы ввода
+using UnityEngine.InputSystem;
 
 namespace WaterProstecting
 {

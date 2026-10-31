@@ -159,6 +159,9 @@ MonoBehaviour:
   bobHeight: 0.15
   isHidden: 0
   isSpecial: 0
+  collectSound: {fileID: 8300000, guid: 643c7e8c0077eaf4a8769ea5b393c5e6, type: 3}
+  soundVolume: 1
+  sfxMixerGroup: {fileID: -7516211172922606113, guid: 8930a82316db8424793100b92ccb6f89, type: 2}
 --- !u!1 &7830306907286410946
 GameObject:
   m_ObjectHideFlags: 0

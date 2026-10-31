@@ -18,11 +18,7 @@ namespace WaterProstecting
         public static SheepQuest Instance;
 
         [Header("Фразы")]
-        public string[] idlePhrases = new string[]
-        {
-            "Бе-е! Собери 3 росинки!",
-            "Бе-е-е! Помоги цветочкам!"
-        };
+        public string[] idlePhrases = new string[] { "Бе-е! Собери 3 росинки!", "Бе-е-е! Помоги цветочкам!" };
         public string questPhrase = "Бе-е! Принеси 3 росинки — покажу спрятанное!";
         public string thanksPhrase = "Бе-е! Спасибо! Смотри, что я нашла!";
 
@@ -35,6 +31,11 @@ namespace WaterProstecting
         [Header("Магазин")]
         public List<ShopItem> shopItems = new List<ShopItem>();
 
+        [Header("Звуки (Audio)")]
+        public AudioSource audioSource;     // Ссылка на AudioSource
+        public AudioClip baaSound;          // Звук "Бе-е!"
+        [Range(0f, 1f)] public float soundVolume = 0.8f; // Громкость
+
         [Header("Отладка")]
         public bool showDebugLogs = true;
 
@@ -46,14 +47,8 @@ namespace WaterProstecting
 
         void Awake()
         {
-            if (Instance == null)
-            {
-                Instance = this;
-            }
-            else
-            {
-                Destroy(gameObject);
-            }
+            if (Instance == null) Instance = this;
+            else Destroy(gameObject);
         }
 
         void Start()
@@ -65,17 +60,18 @@ namespace WaterProstecting
                 playerCustomization = player.GetComponent<PlayerCustomization>();
             }
 
-            //Прячем росинки при старте
             foreach (GameObject dew in hiddenDews)
             {
                 if (dew != null) dew.SetActive(false);
             }
         }
 
-        //Взаимодействие
         public void Interact()
         {
             if (GameManager.Instance == null) return;
+
+            // При каждом нажатии E проигрываем звук
+            PlayBaaSound();
 
             if (!questGiven)
             {
@@ -91,13 +87,23 @@ namespace WaterProstecting
             }
         }
 
+        // Метод для воспроизведения звука
+        private void PlayBaaSound()
+        {
+            if (baaSound != null && audioSource != null)
+            {
+                // Немного меняем тон, чтобы каждый раз звучало чуть по-разному
+                audioSource.pitch = Random.Range(0.85f, 1.15f); 
+                audioSource.PlayOneShot(baaSound, soundVolume);
+            }
+        }
+
         private void TryGiveQuest()
         {
             if (GameManager.Instance.TotalDewCollected >= questDewRequired)
             {
                 questGiven = true;
 
-                //Росинки на квест
                 if (!GameManager.Instance.SpendDew(questDewRequired))
                 {
                     questGiven = false;
@@ -105,17 +111,12 @@ namespace WaterProstecting
                 }
 
                 GameManager.Instance.ShowMessage(questPhrase);
-
-                //Показ спрятанные росинки
                 UnhideDews();
-
                 questCompleted = true;
 
-                //Через 2 секунды выполнено
                 Invoke("SayThanks", 2f);
 
-                if (showDebugLogs)
-                    Debug.Log("Квест барашка выполнен");
+                if (showDebugLogs) Debug.Log("Квест барашка выполнен");
             }
             else
             {
@@ -127,7 +128,11 @@ namespace WaterProstecting
         private void SayThanks()
         {
             if (GameManager.Instance != null)
+            {
+                // Барашек снова беекает, когда благодарит
+                PlayBaaSound();
                 GameManager.Instance.ShowMessage(thanksPhrase);
+            }
         }
 
         private void UnhideDews()
@@ -144,7 +149,6 @@ namespace WaterProstecting
                 GameManager.Instance.ShowMessage("Бе-е! Ты нашёл особенную росинку!");
         }
 
-        //Магазин
         private void OpenShop()
         {
             if (shopItems == null || shopItems.Count == 0)
@@ -162,12 +166,10 @@ namespace WaterProstecting
 
                 GameManager.Instance.ShowMessage("Куплено: " + item.itemName + "!");
 
-                if (showDebugLogs)
-                    Debug.Log("Куплен предмет: " + item.itemName);
+                if (showDebugLogs) Debug.Log("Куплен предмет: " + item.itemName);
 
                 selectedShopIndex++;
-                if (selectedShopIndex >= shopItems.Count)
-                    selectedShopIndex = 0;
+                if (selectedShopIndex >= shopItems.Count) selectedShopIndex = 0;
             }
             else
             {
